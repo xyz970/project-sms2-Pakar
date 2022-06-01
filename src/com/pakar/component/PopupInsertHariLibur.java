@@ -19,6 +19,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -34,16 +37,17 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
     /**
      * Creates new form PopupInsertPegawai
      */
-    public void close(){
+    public void close() {
         WindowEvent closeWindow = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(closeWindow);
     }
-    private void clear(){
+
+    private void clear() {
         txt_id.setText(null);
         txt_hari.setText(null);
         txt_keterangan.setText(null);
     }
-    
+
     public PopupInsertHariLibur(JFrame fr) {
         super(fr, true);
         try {
@@ -52,14 +56,51 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
 
         }
         initComponents();
-        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width  - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 40, 40));
-        txt_id.setBackground(new java.awt.Color(0,0,0,1));
-        txt_hari.setBackground(new java.awt.Color(0,0,0,1));
-        txt_keterangan.setBackground(new java.awt.Color(0,0,0,1));
+        txt_id.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txt_hari.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txt_keterangan.setBackground(new java.awt.Color(0, 0, 0, 1));
 //        initiateDropdownJk();
 //        initiateDropdownPekerjaan();
 //        txt_nik.setVisible(false);
+    }
+
+    public void getDay(Date date) {
+        if (txt_tanggal.getDate() != null) {
+            Date now = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.US);
+            String asWeek = dateFormat.format(txt_tanggal.getDate());
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            System.out.println(asWeek);
+            switch (asWeek) {
+                case "Monday":
+                    txt_hari.setText("Senin");
+                    break;
+                case "Tuesday":
+                    txt_hari.setText("Selasa");
+                    break;
+                case "Wednesday":
+                    txt_hari.setText("Rabu");
+                    break;
+                case "Thursday":
+                    txt_hari.setText("Kamis");
+                    break;
+                case "Friday":
+                    txt_hari.setText("Jumat");
+                    break;
+                case "Saturday":
+                    txt_hari.setText("Sabtu");
+                    break;
+                case "Sunday":
+                    txt_hari.setText("Minggu");
+                    break;
+
+                default:
+                    throw new AssertionError();
+            }
+        }
     }
 
     /**
@@ -114,6 +155,16 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
 
         txt_tanggal.setDateFormatString("yyyy-M-dd");
         txt_tanggal.setFont(new java.awt.Font("Montserrat", 1, 16)); // NOI18N
+        txt_tanggal.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txt_tanggalPropertyChange(evt);
+            }
+        });
+        txt_tanggal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_tanggalKeyReleased(evt);
+            }
+        });
         getContentPane().add(txt_tanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, 200, 30));
 
         jLabel4.setFont(new java.awt.Font("Montserrat", 1, 20)); // NOI18N
@@ -224,13 +275,13 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/check.png"));
-        try{
+        try {
             Insert insert = new Insert();
             String pattern = "YYYY-M-dd";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            String[] id = {"id","hari","keterangan","tanggal"};
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String[] id = {"id", "hari", "keterangan", "tanggal"};
             String tanggal = simpleDateFormat.format(txt_tanggal.getDateEditor().getDate());
-            String[] rowData = {txt_id.getText(),txt_hari.getText(),txt_keterangan.getText(),tanggal};
+            String[] rowData = {txt_id.getText(), txt_hari.getText(), txt_keterangan.getText(), tanggal};
             insert.Table("jadwal_libur", id, rowData);
 //            String sql = "INSERT INTO jadwal_libur VALUES ('"+txt_id.getText()+"','"
 //            +txt_hari.getText()+"','"+txt_keterangan.getText()+"')";
@@ -238,13 +289,14 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
 //            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 //            pst.execute();
             JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil", "Pesan Pemberitahuan", JOptionPane.PLAIN_MESSAGE, icon);
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
         this.setVisible(false);
         new Form4().load_table();
         new Form4().repaint();
         clear();
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txt_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_idActionPerformed
@@ -258,6 +310,16 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
     private void jLabel17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseClicked
         close();
     }//GEN-LAST:event_jLabel17MouseClicked
+
+    private void txt_tanggalKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_tanggalKeyReleased
+
+    }//GEN-LAST:event_txt_tanggalKeyReleased
+
+    private void txt_tanggalPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txt_tanggalPropertyChange
+        // TODO add your handling code here:
+        getDay(txt_tanggal.getDate());
+
+    }//GEN-LAST:event_txt_tanggalPropertyChange
 
     /**
      * @param args the command line arguments

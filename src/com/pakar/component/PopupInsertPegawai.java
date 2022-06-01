@@ -29,15 +29,18 @@ public class PopupInsertPegawai extends javax.swing.JDialog {
     /**
      * Creates new form PopupInsertPegawai
      */
-    private void clear(){
+    private void clear() {
         txt_nik.setText(null);
         txt_nama.setText(null);
         jComboBox2.setSelectedItem(this);
         txt_alamat.setText(null);
         txt_nohp.setText(null);
-        warning.setText(null);
+        txtcard_code.setText(null);
+        warning.setText("");
+
     }
-    public void close(){
+
+    public void close() {
         WindowEvent closeWindow = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(closeWindow);
     }
@@ -73,15 +76,15 @@ public class PopupInsertPegawai extends javax.swing.JDialog {
     public PopupInsertPegawai(JFrame fr) {
         super(fr, true);
         initComponents();
-        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width  - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 40, 40));
-        txt_nik.setBackground(new java.awt.Color(0,0,0,1));
-        txt_nama.setBackground(new java.awt.Color(0,0,0,1));
-        txt_alamat.setBackground(new java.awt.Color(0,0,0,1));
-        txt_nohp.setBackground(new java.awt.Color(0,0,0,1));
-        txtcard_code.setBackground(new java.awt.Color(0,0,0,1));
-        warning.setBackground(new java.awt.Color(0,0,0,1));
-        warning1.setBackground(new java.awt.Color(0,0,0,1));
+        txt_nik.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txt_nama.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txt_alamat.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txt_nohp.setBackground(new java.awt.Color(0, 0, 0, 1));
+        txtcard_code.setBackground(new java.awt.Color(0, 0, 0, 1));
+        warning.setBackground(new java.awt.Color(0, 0, 0, 1));
+        warning1.setBackground(new java.awt.Color(0, 0, 0, 1));
 //        initiateDropdownJk();
 //        initiateDropdownPekerjaan();
 //        txt_nik.setVisible(false);
@@ -317,22 +320,29 @@ public class PopupInsertPegawai extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/check.png"));
         Form1 nnn = new Form1();
-        try{
-            String sql = "INSERT INTO karyawan VALUES ('"+txt_nik.getText()+"','"
-            +txt_nama.getText()+"','"+jComboBox2.getSelectedItem()+"','"
-            +jComboBox1.getSelectedItem()+"','"+txt_alamat.getText()+"','"
-            +txt_nohp.getText()+"', '"+txtcard_code.getText()+"')";
-            java.sql.Connection conn=(Connection)koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil", "Pesan Pemberitahuan", JOptionPane.PLAIN_MESSAGE, icon);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        if (txt_alamat.getText().equals("")
+                || txt_nama.getText().equals("")
+                || txt_nik.getText().equals("")
+                || txt_nohp.getText().equals("")
+                || txtcard_code.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Dimohon untuk mengisi data yang ada", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                String sql = "INSERT INTO karyawan VALUES ('" + txt_nik.getText() + "','"
+                        + txt_nama.getText() + "','" + jComboBox2.getSelectedItem() + "','"
+                        + jComboBox1.getSelectedItem() + "','" + txt_alamat.getText() + "','"
+                        + txt_nohp.getText() + "', '" + txtcard_code.getText() + "')";
+                java.sql.Connection conn = (Connection) koneksi.configDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil", "Pesan Pemberitahuan", JOptionPane.PLAIN_MESSAGE, icon);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
         }
-//        load_table();
+
         clear();
         close();
-        nnn.load_table();
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -347,56 +357,56 @@ public class PopupInsertPegawai extends javax.swing.JDialog {
     private void txt_nohpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nohpKeyPressed
 
         String nomor_hp = txt_nohp.getText();
-        
+
         int panjang = nomor_hp.length();
-        
+
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             txt_nohp.setEditable(false);
             warning.setText("Mohon Masukkan Angka");
-        }else{
-            
-        
-        if (evt.getKeyChar() >= '0' && evt.getKeyChar()<='9') {
-            if (panjang<=13) {
-                txt_nohp.setEditable(true);
-            }else{
-                txt_nohp.setEditable(false);
+        } else {
+
+            if (evt.getKeyChar() >= '0' && evt.getKeyChar() <= '9') {
+                if (panjang <= 13) {
+                    txt_nohp.setEditable(true);
+                } else {
+                    txt_nohp.setEditable(false);
+                }
+            } else {
+                if (evt.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
+                    txt_nohp.setEditable(true);
+                } else {
+                    txt_nohp.setEditable(false);
+                }
             }
-        }else{
-            if (evt.getExtendedKeyCode()==KeyEvent.VK_BACK_SPACE || evt.getExtendedKeyCode()==KeyEvent.VK_DELETE) {
-                txt_nohp.setEditable(true);
-            }else{
-                txt_nohp.setEditable(false);
-            }
-        }}
+        }
     }//GEN-LAST:event_txt_nohpKeyPressed
 
     private void txt_nikKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nikKeyPressed
         String nik = txt_nik.getText();
-        
+
         int panjang = nik.length();
-        
+
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             txt_nik.setEditable(false);
             warning1.setText("Mohon Masukkan Angka");
-        }else{
-            
-        
-        if (evt.getKeyChar() >= '0' && evt.getKeyChar()<='9') {
-            if (panjang<16) {
-                txt_nik.setEditable(true);
-            }else{
-                txt_nik.setEditable(false);
+        } else {
+
+            if (evt.getKeyChar() >= '0' && evt.getKeyChar() <= '9') {
+                if (panjang < 16) {
+                    txt_nik.setEditable(true);
+                } else {
+                    txt_nik.setEditable(false);
+                }
+            } else {
+                if (evt.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
+                    txt_nik.setEditable(true);
+                } else {
+                    txt_nik.setEditable(false);
+                }
             }
-        }else{
-            if (evt.getExtendedKeyCode()==KeyEvent.VK_BACK_SPACE || evt.getExtendedKeyCode()==KeyEvent.VK_DELETE) {
-                txt_nik.setEditable(true);
-            }else{
-                txt_nik.setEditable(false);
-            }
-        }}
+        }
     }//GEN-LAST:event_txt_nikKeyPressed
 
     private void jLabel17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseClicked
@@ -439,4 +449,3 @@ public class PopupInsertPegawai extends javax.swing.JDialog {
     private javax.swing.JTextField warning1;
     // End of variables declaration//GEN-END:variables
 }
-

@@ -14,6 +14,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -74,6 +77,42 @@ getTampil();
         } 
     }
 
+    public void getDay(Date date) {
+        if (txt_tanggal.getDate() != null) {
+            Date now = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.US);
+            String asWeek = dateFormat.format(txt_tanggal.getDate());
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            System.out.println(asWeek);
+            switch (asWeek) {
+                case "Monday":
+                    txt_hari.setText("Senin");
+                    break;
+                case "Tuesday":
+                    txt_hari.setText("Selasa");
+                    break;
+                case "Wednesday":
+                    txt_hari.setText("Rabu");
+                    break;
+                case "Thursday":
+                    txt_hari.setText("Kamis");
+                    break;
+                case "Friday":
+                    txt_hari.setText("Jumat");
+                    break;
+                case "Saturday":
+                    txt_hari.setText("Sabtu");
+                    break;
+                case "Sunday":
+                    txt_hari.setText("Minggu");
+                    break;
+
+                default:
+                    throw new AssertionError();
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -206,6 +245,11 @@ getTampil();
 
         txt_tanggal.setDateFormatString("yyyy-M-dd");
         txt_tanggal.setFont(new java.awt.Font("Montserrat", 1, 16)); // NOI18N
+        txt_tanggal.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txt_tanggalPropertyChange(evt);
+            }
+        });
         rounded3.add(txt_tanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 130, 210, 30));
 
         jLabel6.setFont(new java.awt.Font("Montserrat", 1, 20)); // NOI18N
@@ -295,6 +339,10 @@ getTampil();
     private void jLabel17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseClicked
         close();
     }//GEN-LAST:event_jLabel17MouseClicked
+
+    private void txt_tanggalPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txt_tanggalPropertyChange
+        getDay(txt_tanggal.getDate());
+    }//GEN-LAST:event_txt_tanggalPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

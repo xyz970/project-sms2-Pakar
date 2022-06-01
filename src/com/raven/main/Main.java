@@ -39,20 +39,19 @@ public class Main extends javax.swing.JFrame {
 
 
     public Main() throws SQLException {
-        
-        
-
         initComponents();
         init();
         
     }
     
     void logout(){
+        
         PopupLogout pl = new PopupLogout();
         pl.setVisible(true);
+        this.setVisible(false);
     }
 
-    private void init() throws SQLException {
+    public void init() throws SQLException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new Menu();

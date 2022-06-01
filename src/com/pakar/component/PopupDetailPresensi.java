@@ -5,9 +5,14 @@
  */
 package com.pakar.component;
 
+import com.pakar.db.Select;
 import com.pakar.koneksi.koneksi;
 import java.awt.Toolkit;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -20,41 +25,46 @@ public class PopupDetailPresensi extends javax.swing.JFrame {
 
     /**
      * Creates new form PopupDetailPresensi
+     * @throws java.sql.SQLException
      */
-    public PopupDetailPresensi() {
+    public PopupDetailPresensi(){
         initComponents();
-        load_table();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
 
     }
-
-    public void load_table() {
-        DefaultTableModel model = new DefaultTableModel() {
+    DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
+    public void load_table(String nama) throws SQLException{
         model.addColumn("Status");
         model.addColumn("Jam");
         model.addColumn("Kehadiran");
         model.addColumn("Keterangan");
         TableRowSorter myTableRowSorter = new TableRowSorter(model);
         jTable1.setRowSorter(myTableRowSorter);
-        try {
-            int no = 1;
-            String sql = "SELECT jenis_presensi.ket_jenis_presensi,jam,kehadiran,keterangan FROM `detail_presensi` \n"
-                    + "JOIN jenis_presensi\n"
-                    + "ON id_jenis_presensi = jenis_presensi.id";
+         String sql2 = "SELECT karyawan.nik, presensi.id FROM `presensi` \n"
+                    + " JOIN karyawan\n"
+                    + " ON karyawan_nik = karyawan.nik where karyawan.nama = '"+nama+"'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet User = stm.executeQuery(sql2);
+            User.next();
+        
+        try {
+            int no = 1;
+            String sql = "SELECT jenis_presensi.ket_jenis_presensi,jam,keterangan FROM `detail_presensi` \n"
+                    + "JOIN jenis_presensi\n"
+                    + " ON id_jenis_presensi = jenis_presensi.id where detail_presensi.id_presensi = '"+User.getString(2)+"'";
             java.sql.ResultSet rs = stm.executeQuery(sql);
 
 //            ResultSet rs = new Select().all("presensi");
             while (rs.next()) {
                 model.addRow(new Object[]{rs.getString(1),
-                    rs.getString(2), rs.getString(3), rs.getString(4)});
+                    rs.getString(2), rs.getString(3)});
                 jTable1.setModel(model);
                 jTable1.validate();
                 jTable1.repaint();
@@ -162,7 +172,9 @@ public class PopupDetailPresensi extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PopupDetailPresensi().setVisible(true);
+               
+                    new PopupDetailPresensi().setVisible(true);
+               
             }
         });
     }

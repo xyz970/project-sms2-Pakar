@@ -77,7 +77,17 @@ public class Form1 extends javax.swing.JPanel implements ActionListener {
         model.addColumn("Card Code");
         TableRowSorter myTableRowSorter = new TableRowSorter(model);
         jTable1.setRowSorter(myTableRowSorter);
+        addDataTable();
+        
+    }
+    private void addDataTable(){
+         int row = model.getRowCount();
+        for (int i = 0; i < row; i++) {
+            model.removeRow(0);
+        }
+
         try {
+            
             int no = 1;
             String sql = "Select * from karyawan";
             java.sql.Connection conn = (Connection) koneksi.configDB();
@@ -337,7 +347,7 @@ public class Form1 extends javax.swing.JPanel implements ActionListener {
         String nik = model.getValueAt(index, 0).toString();
         PopupFormEditPegawai pofep = new PopupFormEditPegawai((JFrame) SwingUtilities.getWindowAncestor(this), nik);
         pofep.setVisible(true);
-        load_table();
+        addDataTable();
 
 //        jButton2.setEnabled(true);
 //        jButton3.setEnabled(true);
@@ -489,13 +499,15 @@ public class Form1 extends javax.swing.JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
         }
+        addDataTable();
     }//GEN-LAST:event_popup_deleteActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
        PopupInsertPegawai poptmbah = new PopupInsertPegawai((JFrame) SwingUtilities.getWindowAncestor(this));
        poptmbah.setVisible(true);
-       load_table();
+       addDataTable();
+//       load_table();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btn_exportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportActionPerformed

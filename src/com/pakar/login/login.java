@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package com.pakar.login;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.pakar.component.Header;
 import com.pakar.component.Header2;
 import com.pakar.component.PopupRegister;
+import com.pakar.component.User;
 import com.pakar.koneksi.Select;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ import com.pakar.koneksi.koneksi;
 import com.raven.main.Main;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author Akbar Ramadhani Firdaus
@@ -26,14 +29,13 @@ public class login extends javax.swing.JFrame {
 
     public login() {
         initComponents();
-         try {
+        try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
 
         }
-        
-    }
 
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -133,22 +135,20 @@ public class login extends javax.swing.JFrame {
 
     private void txtpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpassActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txtpassActionPerformed
 
     private void txtbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtbtnActionPerformed
-                                        
-                
+
         try {
             Select select = new Select();
             String[] condition = {
-            "username = '"+txtusername.getText()+"'",
-            "password = '"+txtpass.getText()+"'",
-            };
-            ResultSet rs = select.getWhere("admin",condition);
-            if(rs.next()){
+                "username = '" + txtusername.getText() + "'",
+                "password = '" + txtpass.getText() + "'",};
+            ResultSet rs = select.getWhere("admin", condition);
+            if (rs.next()) {
                 txtusername.setText(rs.getString("Username"));
-                if(txtpass.getText().equals(rs.getString("Password")) && txtusername.getText().equals(rs.getString("Username"))){
+                if (txtpass.getText().equals(rs.getString("Password")) && txtusername.getText().equals(rs.getString("Username"))) {
                     JOptionPane.showMessageDialog(null, "berhasil login");
                     this.setVisible(false);
                     Header hd = new Header();
@@ -156,18 +156,19 @@ public class login extends javax.swing.JFrame {
 //                    UserSession us = UserSession();
                     Main utm = new Main();
                     utm.setVisible(true);
-                    dispose();
                 }
-            }else{
-                    JOptionPane.showMessageDialog(null, "Username atau Password Salah", "Pesan Pemberitahuan", JOptionPane.WARNING_MESSAGE);
-                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Username atau Password Salah", "Pesan Pemberitahuan", JOptionPane.WARNING_MESSAGE);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }        // TODO add your handling code here:
     }//GEN-LAST:event_txtbtnActionPerformed
 
     private void closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closeMouseClicked
-       this.setVisible(false);
+        this.setVisible(false);
+        User usr = new User();
+        usr.setVisible(true);
     }//GEN-LAST:event_closeMouseClicked
 
     /**

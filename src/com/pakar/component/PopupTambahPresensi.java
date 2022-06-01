@@ -21,26 +21,26 @@ import javax.swing.JOptionPane;
  *
  * @author mhmmdadi21
  */
-public class PopupTambahPresensi extends javax.swing.JFrame {
+public class PopupTambahPresensi extends javax.swing.JDialog {
 
-    
     /**
      * Creates new form PopupTambahPresensi
      */
     public PopupTambahPresensi() {
         initComponents();
-        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width  - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
         status_option.removeAllItems();
         String[] option = {"Sakit", "Izin", "Lembur", "Hadir"};
         for (String option1 : option) {
             status_option.addItem(option1);
         }
     }
-    public void close(){
+
+    public void close() {
         WindowEvent closeWindow = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(closeWindow);
     }
-    
+
     private String SearchNIK(String nama) throws SQLException {
 //        Select select = new Select();
         String sql = "Select * from karyawan where nama LIKE '%" + nama + "%'";
@@ -59,56 +59,52 @@ public class PopupTambahPresensi extends javax.swing.JFrame {
 //        System.out.println(rs.getString(2));
         return rs.getString(1);
     }
-    
-    private void InsertPresensi(String nama) throws SQLException{
+
+    private void InsertPresensi(String nama) throws SQLException {
         String pattern = "YYYY-M-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String[] id = {"id","hari","keterangan","tanggal"};
+        String[] id = {"id", "hari", "keterangan", "tanggal"};
         String tanggal = simpleDateFormat.format(txt_tanggal.getDateEditor().getDate());
         java.sql.Connection con = (Connection) Settings.MyConfig();
         Select slct = new Select();
-        LocalDate dateObj = LocalDate.now();
-        String dateNow = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String date = dateObj.format(formatter);
-        String idformat = tanggal + "_" + SearchNIK(nama);
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(txt_tanggal.getDateEditor().getDate());
+        String idformat = date + "_" + SearchNIK(nama);
         String status = status_option.getSelectedItem().toString();
-        
+
         if (status.equals("Lembur")) {
             InsertDetail(idformat);
+        } else {
+            String[] condition = {" id = '" + idformat + "'"};
+            ResultSet checkPresensi = slct.getWhere("presensi", condition);
+            int count = 0;
+            while (checkPresensi.next()) {
+                count++;
+            }
+
+            String sqlInsert = "INSERT INTO `presensi`\n"
+                    + "(`id`, `tanggal`, `karyawan_nik`, `keterangan`) \n"
+                    + "VALUES \n"
+                    + " ('" + idformat + "','" + tanggal + "','" + SearchNIK(nama) + "','" + status + "')";
+            java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
+            pst2.execute();
+            dialog();
         }
-        
-        String[] condition = {" id = '"+idformat+"'"};
-        ResultSet checkPresensi = slct.getWhere("presensi", condition);
-        int count = 0;
-        while (checkPresensi.next()) {            
-            count++;
-        }
-        
-             String sqlInsert = "INSERT INTO `presensi`\n"
-                        + "(`id`, `tanggal`, `karyawan_nik`, `keterangan`) \n"
-                        + "VALUES \n"
-                        + " ('" + idformat + "','" + tanggal + "','" + SearchNIK(nama) + "','"+status+"')";
-                java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
-                pst2.execute();
-                dialog();
-        
-        
+
     }
-    
-    private void dialog(){
-         JOptionPane.showMessageDialog(new PopupTambahPresensi(),"Data presensi berhasil dimasukkan");
+
+    private void dialog() {
+        JOptionPane.showMessageDialog(new PopupTambahPresensi(), "Data presensi berhasil dimasukkan");
     }
-    
-    private void InsertDetail(String format) throws SQLException{
-         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-    Date dateDate = new Date();
-    String timeNow =  dateFormat.format(dateDate);
-    
+
+    private void InsertDetail(String format) throws SQLException {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date dateDate = new Date();
+        String timeNow = dateFormat.format(dateDate);
+
         java.sql.Connection con = (Connection) Settings.MyConfig();
-             String sqlInsert = "INSERT INTO `detail_presensi`\n" +
-                "(`id_presensi`, `id_jenis_presensi`, `jam`, `keterangan`) \n" +
-                "VALUES ('"+format+"','LMBR','"+timeNow+"','Toleransi')";
+        String sqlInsert = "INSERT INTO `detail_presensi`\n"
+                + "(`id_presensi`, `id_jenis_presensi`, `jam`, `keterangan`) \n"
+                + "VALUES ('" + format + "','LMBR','" + timeNow + "','Toleransi')";
         java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
         pst2.execute();
         dialog();
@@ -208,11 +204,13 @@ public class PopupTambahPresensi extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(new PopupTambahPresensi(), "Dimohon untuk mengisi field yang tersedia");
         } else {
             try {
-            InsertPresensi(txt_nama.getText());
-            this.setVisible(false);
-        } catch (SQLException ex) {
-            Logger.getLogger(PopupTambahPresensi.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                InsertPresensi(txt_nama.getText());
+
+                this.setVisible(false);
+                throw new Exception("Data sudah ada, Anda sudah melakukan absen pada hari tersebut");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
 

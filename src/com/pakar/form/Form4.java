@@ -1,4 +1,5 @@
 package com.pakar.form;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.pakar.component.PopupDeleteDataPegawai;
 import com.pakar.component.PopupEditDataPegawai;
@@ -46,16 +47,18 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-public class Form4 extends javax.swing.JPanel{
-    
-    public void load_table(){
-       DefaultTableModel model = new DefaultTableModel(){
-            @Override
-                public boolean isCellEditable(int row, int column){
-                    return false;
-            }};
+public class Form4 extends javax.swing.JPanel {
+
+    DefaultTableModel model = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    public void load_table() {
+
 //        jTable1.setModel(model);
-        
         model.addColumn("No");
         model.addColumn("ID");
         model.addColumn("Hari");
@@ -63,7 +66,17 @@ public class Form4 extends javax.swing.JPanel{
         model.addColumn("Keterangan");
         TableRowSorter myTableRowSorter = new TableRowSorter(model);
         jTable1.setRowSorter(myTableRowSorter);
-        try{
+        addDataTable();
+
+    }
+
+    private void addDataTable() {
+        int row = model.getRowCount();
+        for (int i = 0; i < row; i++) {
+            model.removeRow(0);
+        }
+        try {
+
             int no = 1;
             String sql = "Select * from jadwal_libur ";
 
@@ -71,20 +84,19 @@ public class Form4 extends javax.swing.JPanel{
 //                    : "Select * From karyawan Where karyawan.nik LIKE '%"+cari+"%'";
 //            String sql = "SELECT karyawan.nik, karyawan.nama, karyawan.jabatan ,karyawan.jenis_kelamin, karyawan.alamat, karyawan.no_hp "
 //                    + "FROM karyawan join jabatan on karyawan.jabatan_id = jabatan.id WHERE karyawan.nik LIKE '%"+cari+"%'";
-            java.sql.Connection conn=(Connection)koneksi.configDB();
-             java.sql.Statement stm=conn.createStatement();
-             java.sql.ResultSet rs=stm.executeQuery(sql);
-             
-             while(rs.next()){
-                 model.addRow(new Object[]{no++, rs.getString(1),
-                 rs.getString(2),rs.getString(3), rs.getString(4)});
-                 jTable1.setModel(model);
-                 jTable1.validate();
-                 jTable1.repaint();
-             }
-             
-             
-        }catch(Exception e){
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
+
+            while (rs.next()) {
+                model.addRow(new Object[]{no++, rs.getString(1),
+                    rs.getString(2), rs.getString(3), rs.getString(4)});
+                jTable1.setModel(model);
+                jTable1.validate();
+                jTable1.repaint();
+            }
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
@@ -94,7 +106,7 @@ public class Form4 extends javax.swing.JPanel{
         obj.showMessage(message);
         return obj.isOk();
     }
-    
+
     public Form4() {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
@@ -104,13 +116,14 @@ public class Form4 extends javax.swing.JPanel{
         initComponents();
         setOpaque(false);
         load_table();
-        setBackground(new Color(0,0,0,0));
+        setBackground(new Color(0, 0, 0, 0));
         jTable1.getTableHeader().setOpaque(false);
         jTable1.getTableHeader().setFont(new Font("Montserrat", Font.BOLD, 14));
         jTable1.setGridColor(new Color(230, 230, 230));
         jTable1.setRowHeight(40);
         jTable1.setShowHorizontalLines(true);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -241,49 +254,49 @@ public class Form4 extends javax.swing.JPanel{
     }// </editor-fold>//GEN-END:initComponents
 
     private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
-        DefaultTableModel model = new DefaultTableModel();
-                String cari = txt_cari.getText();
+//        DefaultTableModel model = new DefaultTableModel();
+//                String cari = txt_cari.getText();
         int row = model.getRowCount();
         for (int i = 0; i < row; i++) {
             model.removeRow(0);
         }
 
-        try{
+        try {
             int no = 1;
-            String sql = "Select * from jadwal_libur Where keterangan LIKE '%"+cari+"%'";
-            java.sql.Connection conn=(Connection)koneksi.configDB();
-            java.sql.Statement stm=conn.createStatement();
-            java.sql.ResultSet rs=stm.executeQuery(sql);
+            String sql = "Select * from jadwal_libur Where keterangan LIKE '%" + txt_cari.getText() + "%'";
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
 
-            while(rs.next()){
-                model.addRow(new Object[]{no++,rs.getString(1),
-                    rs.getString(2),rs.getString(3),rs.getString(4)});
-            jTable1.setModel(model);
-            jTable1.validate();
-            jTable1.repaint();
-        }
+            while (rs.next()) {
+                model.addRow(new Object[]{no++, rs.getString(1),
+                    rs.getString(2), rs.getString(3), rs.getString(4)});
+                jTable1.setModel(model);
+                jTable1.validate();
+                jTable1.repaint();
+            }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_txt_cariKeyReleased
-    
+
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int baris = jTable1.rowAtPoint(evt.getPoint());
         int index = jTable1.getSelectedRow();
-      
+
         TableModel model = jTable1.getModel();
 
         String id = model.getValueAt(index, 1).toString();
         PopupFormEditHariLibur pofep = new PopupFormEditHariLibur((JFrame) SwingUtilities.getWindowAncestor(this), id);
         pofep.setVisible(true);
-        
-        load_table();
+
+        addDataTable();
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
-        if (evt.getButton()==MouseEvent.BUTTON3) {
-            if (evt.isPopupTrigger()&&jTable1.getSelectedRowCount() !=0) {
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            if (evt.isPopupTrigger() && jTable1.getSelectedRowCount() != 0) {
                 jPopupMenu1.show(evt.getComponent(), evt.getX(), evt.getY());
             }
         }
@@ -292,17 +305,17 @@ public class Form4 extends javax.swing.JPanel{
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         PopupInsertHariLibur pip = new PopupInsertHariLibur((JFrame) SwingUtilities.getWindowAncestor(this));
         pip.setVisible(true);
-        load_table();
+        addDataTable();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void popup_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popup_deleteActionPerformed
         int row = jTable1.getSelectedRow();
         if (row != -1) {
             String nik = jTable1.getValueAt(row, 0).toString();
-            String sql = "DELETE FROM karyawan WHERE nik='"+nik+"'";
-            try{
-                java.sql.Connection conn=(Connection)koneksi.configDB();
-                java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            String sql = "DELETE FROM karyawan WHERE nik='" + nik + "'";
+            try {
+                java.sql.Connection conn = (Connection) koneksi.configDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
                 pst.execute();
                 JOptionPane.showMessageDialog(this, "DELETE BERHASIL");
             } catch (SQLException ex) {

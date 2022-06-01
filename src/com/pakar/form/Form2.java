@@ -18,11 +18,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
@@ -40,15 +44,16 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class Form2 extends javax.swing.JPanel implements ActionListener{
+public class Form2 extends javax.swing.JPanel implements ActionListener {
+
     DefaultTableModel model = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
     public void load_table() {
-       
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
         Date date = new Date();
@@ -60,12 +65,22 @@ public class Form2 extends javax.swing.JPanel implements ActionListener{
         String cari = txt_cari.getText();
         TableRowSorter myTableRowSorter = new TableRowSorter(model);
         jTable1.setRowSorter(myTableRowSorter);
+        addDataTable();
+    }
+
+    private void addDataTable() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
+        Date date = new Date();
+        int row = model.getRowCount();
+        for (int i = 0; i < row; i++) {
+            model.removeRow(0);
+        }
         try {
             int no = 1;
             String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
                     + "FROM `presensi` \n"
                     + "JOIN karyawan \n"
-                    + "ON nik = presensi.karyawan_nik where presensi.tanggal = '"+ dateFormat.format(date)+"'";
+                    + "ON nik = presensi.karyawan_nik where presensi.tanggal = '" + dateFormat.format(date) + "'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
@@ -270,149 +285,148 @@ public class Form2 extends javax.swing.JPanel implements ActionListener{
         add(btn_filter, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 80, 80, 30));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void export() throws SQLException, FileNotFoundException, IOException{
-      
+    private void export() throws SQLException, FileNotFoundException, IOException {
+
         if (txt_tanggal1.getDateEditor().getDate() == null || txt_tanggal2.getDateEditor().getDate() == null) {
             JOptionPane.showMessageDialog(null, "Export Gagal \nDimohon untuk mengisi field tanggal", "Gagal", JOptionPane.ERROR_MESSAGE);
-        }else{
-        
-        String pattern = "YYYY-M-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
-        String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
-        
-        String dir = FileUtils.getUserDirectoryPath();
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        DataFormat dataFormat = workbook.createDataFormat();
+        } else {
+
+            String pattern = "YYYY-M-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
+            String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
+
+            String dir = FileUtils.getUserDirectoryPath();
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            DataFormat dataFormat = workbook.createDataFormat();
             XSSFFont font = workbook.createFont();
-         font.setFontName(XSSFFont.DEFAULT_FONT_NAME);
-        font.setFontHeightInPoints((short)10);
-        font.setColor(IndexedColors.WHITE.getIndex());
-        CellStyle style;
-        CellStyle style2;
-        style = workbook.createCellStyle();
-        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
-        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
-        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+            font.setFontName(XSSFFont.DEFAULT_FONT_NAME);
+            font.setFontHeightInPoints((short) 10);
+            font.setColor(IndexedColors.WHITE.getIndex());
+            CellStyle style;
+            CellStyle style2;
+            style = workbook.createCellStyle();
+            style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+            style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+            style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+            style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+            style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+            style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+            style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+            style.setTopBorderColor(IndexedColors.BLACK.getIndex());
 
-        style2 = workbook.createCellStyle();
-        style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style2.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-        style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style2.setTopBorderColor(IndexedColors.BLACK.getIndex());
-        style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style2.setTopBorderColor(IndexedColors.BLACK.getIndex());
-        style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style2.setTopBorderColor(IndexedColors.BLACK.getIndex());
-        style2.setFillForegroundColor(IndexedColors.GREEN.getIndex());
-        style2.setFont(font);
-        style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+            style2 = workbook.createCellStyle();
+            style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+            style2.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+            style2.setTopBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
+            style2.setTopBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
+            style2.setTopBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+            style2.setFont(font);
+            style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 
-        XSSFSheet spreadsheet = workbook.createSheet("Data Presensi "+tanggal1+" sd "+tanggal2);
-        XSSFRow row = spreadsheet.createRow(1);
-        XSSFCell cell;
-        
-         cell = row.createCell(1);
-        cell.setCellValue("NIK");
-        cell.setCellStyle(style2);
+            XSSFSheet spreadsheet = workbook.createSheet("Data Presensi " + tanggal1 + " sd " + tanggal2);
+            XSSFRow row = spreadsheet.createRow(1);
+            XSSFCell cell;
 
-        cell = row.createCell(2);
-        cell.setCellValue("Nama Karyawan");
-        cell.setCellStyle(style2);
+            cell = row.createCell(1);
+            cell.setCellValue("NIK");
+            cell.setCellStyle(style2);
 
-        cell = row.createCell(3);
-        cell.setCellValue("Keterangan");
-        cell.setCellStyle(style2);
-        
-        cell = row.createCell(4);
-        cell.setCellValue("Tanggal");
-        cell.setCellStyle(style2);
+            cell = row.createCell(2);
+            cell.setCellValue("Nama Karyawan");
+            cell.setCellStyle(style2);
 
-        int i = 2;
-        int progressVal = 0;
-        
-        String sql = "SELECT presensi.id,karyawan.nama,presensi.keterangan,presensi.tanggal \n"
+            cell = row.createCell(3);
+            cell.setCellValue("Keterangan");
+            cell.setCellStyle(style2);
+
+            cell = row.createCell(4);
+            cell.setCellValue("Tanggal");
+            cell.setCellStyle(style2);
+
+            int i = 2;
+            int progressVal = 0;
+
+            String sql = "SELECT presensi.id,karyawan.nama,presensi.keterangan,presensi.tanggal \n"
                     + "FROM `presensi` \n"
                     + "JOIN karyawan \n"
-                    + "ON nik = presensi.karyawan_nik where presensi.tanggal between '"+tanggal1+"' and"
-                + " '"+tanggal2+"'";
+                    + "ON nik = presensi.karyawan_nik where presensi.tanggal between '" + tanggal1 + "' and"
+                    + " '" + tanggal2 + "'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
-            System.out.println(tanggal1+" "+tanggal2);
+            System.out.println(tanggal1 + " " + tanggal2);
             while (rs.next()) {
-            spreadsheet.autoSizeColumn(i);
-            row = spreadsheet.createRow(i);
-            cell = row.createCell(1);
-            cell.setCellValue(rs.getString(1));
-            cell.setCellStyle(style);
+                spreadsheet.autoSizeColumn(i);
+                row = spreadsheet.createRow(i);
+                cell = row.createCell(1);
+                cell.setCellValue(rs.getString(1));
+                cell.setCellStyle(style);
 
-            cell = row.createCell(2);
-            cell.setCellValue(rs.getString(2));
-            cell.setCellStyle(style);
+                cell = row.createCell(2);
+                cell.setCellValue(rs.getString(2));
+                cell.setCellStyle(style);
 
-            cell = row.createCell(3);
-            cell.setCellValue(rs.getString(3));
-            cell.setCellStyle(style);
+                cell = row.createCell(3);
+                cell.setCellValue(rs.getString(3));
+                cell.setCellStyle(style);
 
-            cell = row.createCell(4);
-            cell.setCellValue(rs.getString(4));
-            cell.setCellStyle(style);
-            
-             try{
-                Thread.sleep(2);//Pausing execution for 50 milliseconds
+                cell = row.createCell(4);
+                cell.setCellValue(rs.getString(4));
+                cell.setCellStyle(style);
+
+                try {
+                    Thread.sleep(2);//Pausing execution for 50 milliseconds
 //                progress.setValue(20);
-                System.out.println(progressVal);
-            progress.setString("Exporting...");
-            progressVal += new Random().nextInt(100);
-            }catch(InterruptedException e){
-                e.printStackTrace();
+                    System.out.println(progressVal);
+                    progress.setString("Exporting...");
+                    progressVal += new Random().nextInt(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                i++;
             }
-           
-            i++;
+            String path = dir + "/Pakar/Export/Presensi/Data-Presensi_" + tanggal1 + "_" + tanggal2 + ".xlsx";
+            try ( FileOutputStream fileOut = new FileOutputStream(new File(path))) {
+                workbook.write(fileOut);
+            }
+            JOptionPane.showMessageDialog(null, "Berhasil di export", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+
         }
-          String path = dir + "/Pakar/Export/Presensi/Data-Presensi_"+tanggal1+"_"+tanggal2+".xlsx";
-        try (FileOutputStream fileOut = new FileOutputStream(new File(path))) {
-            workbook.write(fileOut);
-        }
-        JOptionPane.showMessageDialog(null, "Berhasil di export","Berhasil",JOptionPane.INFORMATION_MESSAGE);
- 
-        }
-        
+
     }
-    
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
         int i = 0;
         if (e.getSource() == btn_export) {
             progress.setVisible(true);
-                try {
-                    while (i <= 100) {
-                        Thread.sleep(30);
-                        progress.paintImmediately(0, 0, 200, 200);
-                        progress.setValue(i);
-                        
-                        i++;
-                    }
-                } catch (InterruptedException e1) {
-                    System.out.print("Exception =" + e1);
+            try {
+                while (i <= 100) {
+                    Thread.sleep(30);
+                    progress.paintImmediately(0, 0, 200, 200);
+                    progress.setValue(i);
+
+                    i++;
                 }
-                progress.setValue(0);
-                message.setText("Export Selesai");
-
+            } catch (InterruptedException e1) {
+                System.out.print("Exception =" + e1);
             }
-        }
+            progress.setValue(0);
+            message.setText("Export Selesai");
 
-    
+        }
+    }
+
+
     private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
-       int row = model.getRowCount();
+        int row = model.getRowCount();
         for (int i = 0; i < row; i++) {
             model.removeRow(0);
         }
@@ -420,33 +434,55 @@ public class Form2 extends javax.swing.JPanel implements ActionListener{
 //            JOptionPane.showMessageDialog(null, "Export Gagal \nDimohon untuk mengisi field tanggal", "Gagal", JOptionPane.ERROR_MESSAGE);
 //        }
         try {
-            
-            String pattern = "YYYY-M-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
-        String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
-            int no = 1;
-              String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
-                    + " FROM `presensi` \n"
-                    + " JOIN karyawan \n"
-                    + " ON nik = presensi.karyawan_nik where presensi.tanggal between '"+tanggal1+"'"
-                      + " and '"+tanggal2+"' and karyawan.nama LIKE '%"+txt_cari.getText()+"%'";
-            java.sql.Connection conn = (Connection) koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet rs = stm.executeQuery(sql);
 
-            while (rs.next()) {
-                model.addRow(new Object[]{rs.getString(1),
-                    rs.getString(2), rs.getString(3), rs.getString(4)});
-                jTable1.setModel(model);
-                jTable1.validate();
-                jTable1.repaint();
+            String pattern = "YYYY-M-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            LocalDate dateObj = LocalDate.now();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
+            Date date = new Date();
+            int no = 1;
+            if (txt_tanggal1.getDateEditor().getDate() == null || txt_tanggal1.getDateEditor().getDate() == null) {
+                String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
+                        + " FROM `presensi` \n"
+                        + " JOIN karyawan \n"
+                        + " ON nik = presensi.karyawan_nik where presensi.tanggal = '" + dateFormat.format(date) + "' and karyawan.nama LIKE '%" + txt_cari.getText() + "%'";
+                java.sql.Connection conn = (Connection) koneksi.configDB();
+                java.sql.Statement stm = conn.createStatement();
+                java.sql.ResultSet rs = stm.executeQuery(sql);
+
+                while (rs.next()) {
+                    model.addRow(new Object[]{rs.getString(1),
+                        rs.getString(2), rs.getString(3), rs.getString(4)});
+                    jTable1.setModel(model);
+                    jTable1.validate();
+                    jTable1.repaint();
+                }
+            } else {
+                
+            String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
+            String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
+                String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
+                        + " FROM `presensi` \n"
+                        + " JOIN karyawan \n"
+                        + " ON nik = presensi.karyawan_nik where presensi.tanggal between '" + tanggal1 + "'"
+                        + " and '" + tanggal2 + "' and karyawan.nama LIKE '%" + txt_cari.getText() + "%'";
+                java.sql.Connection conn = (Connection) koneksi.configDB();
+                java.sql.Statement stm = conn.createStatement();
+                java.sql.ResultSet rs = stm.executeQuery(sql);
+
+                while (rs.next()) {
+                    model.addRow(new Object[]{rs.getString(1),
+                        rs.getString(2), rs.getString(3), rs.getString(4)});
+                    jTable1.setModel(model);
+                    jTable1.validate();
+                    jTable1.repaint();
+                }
             }
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-        
+
 
     }//GEN-LAST:event_txt_cariKeyReleased
 
@@ -468,8 +504,12 @@ public class Form2 extends javax.swing.JPanel implements ActionListener{
         String nama = model.getValueAt(index, 2).toString();
         String tanggal = model.getValueAt(index, 1).toString();
         PopupDetailPresensi popup = new PopupDetailPresensi();
-        popup.setTitle("Detail Presensi "+nama);
-//        popup.load_table(nama);
+        popup.setTitle("Detail Presensi " + nama);
+        try {
+            popup.load_table(nama);
+        } catch (SQLException ex) {
+            Logger.getLogger(Form2.class.getName()).log(Level.SEVERE, null, ex);
+        }
         popup.txt_nama.setText(nama);
         popup.txt_tanggal.setText(tanggal);
         popup.setVisible(true);
@@ -478,45 +518,47 @@ public class Form2 extends javax.swing.JPanel implements ActionListener{
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btn_filterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_filterActionPerformed
-       int row = model.getRowCount();
+        int row = model.getRowCount();
         for (int i = 0; i < row; i++) {
             model.removeRow(0);
         }
-         if (txt_tanggal1.getDateEditor().getDate() == null || txt_tanggal2.getDateEditor().getDate() == null) {
-            JOptionPane.showMessageDialog(null, "Export Gagal \nDimohon untuk mengisi field tanggal", "Gagal", JOptionPane.ERROR_MESSAGE);
-        }
-        try {
-            
-            String pattern = "YYYY-M-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
-        String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
-            int no = 1;
-              String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
-                    + "FROM `presensi` \n"
-                    + "JOIN karyawan \n"
-                    + "ON nik = presensi.karyawan_nik where presensi.tanggal between '"+tanggal1+"'"
-                      + " and '"+tanggal2+"'";
-            java.sql.Connection conn = (Connection) koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet rs = stm.executeQuery(sql);
+        if (txt_tanggal1.getDateEditor().getDate() == null || txt_tanggal2.getDateEditor().getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Filter Gagal \nDimohon untuk mengisi field tanggal", "Gagal", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
 
-            while (rs.next()) {
-                model.addRow(new Object[]{rs.getString(1),
-                    rs.getString(2), rs.getString(3), rs.getString(4)});
-                jTable1.setModel(model);
-                jTable1.validate();
-                jTable1.repaint();
+                String pattern = "YYYY-M-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
+                String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
+                int no = 1;
+                String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
+                        + "FROM `presensi` \n"
+                        + "JOIN karyawan \n"
+                        + "ON nik = presensi.karyawan_nik where presensi.tanggal between '" + tanggal1 + "'"
+                        + " and '" + tanggal2 + "'";
+                java.sql.Connection conn = (Connection) koneksi.configDB();
+                java.sql.Statement stm = conn.createStatement();
+                java.sql.ResultSet rs = stm.executeQuery(sql);
+
+                while (rs.next()) {
+                    model.addRow(new Object[]{rs.getString(1),
+                        rs.getString(2), rs.getString(3), rs.getString(4)});
+                    jTable1.setModel(model);
+                    jTable1.validate();
+                    jTable1.repaint();
+                }
+
+            } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
             }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btn_filterActionPerformed
 
     private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
-       PopupTambahPresensi ptp = new PopupTambahPresensi();
-       ptp.setVisible(true);
+        PopupTambahPresensi ptp = new PopupTambahPresensi();
+        ptp.setVisible(true);
+        addDataTable();
 //       ptp.setP
     }//GEN-LAST:event_btn_tambahActionPerformed
 
@@ -536,4 +578,5 @@ public class Form2 extends javax.swing.JPanel implements ActionListener{
     private com.toedter.calendar.JDateChooser txt_tanggal1;
     private com.toedter.calendar.JDateChooser txt_tanggal2;
     // End of variables declaration//GEN-END:variables
+
 }

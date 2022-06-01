@@ -397,6 +397,7 @@ public class User extends javax.swing.JFrame {
 //        }
         if (evt.isControlDown() && evt.getKeyChar() != 'a' && evt.getKeyCode() == 65) {
             login lgn = new login();
+            this.setVisible(false);
             lgn.setVisible(true);
         }
         try {
