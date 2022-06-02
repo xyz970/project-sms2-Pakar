@@ -39,11 +39,10 @@ public class PopupDetailPresensi extends javax.swing.JFrame {
             }
         };
 
-    public void load_table(String nama) throws SQLException{
+    public void load_table(String nama,String id) throws SQLException{
         model.addColumn("Status");
         model.addColumn("Jam");
         model.addColumn("Kehadiran");
-        model.addColumn("Keterangan");
         TableRowSorter myTableRowSorter = new TableRowSorter(model);
         jTable1.setRowSorter(myTableRowSorter);
          String sql2 = "SELECT karyawan.nik, presensi.id FROM `presensi` \n"
@@ -58,7 +57,7 @@ public class PopupDetailPresensi extends javax.swing.JFrame {
             int no = 1;
             String sql = "SELECT jenis_presensi.ket_jenis_presensi,jam,keterangan FROM `detail_presensi` \n"
                     + "JOIN jenis_presensi\n"
-                    + " ON id_jenis_presensi = jenis_presensi.id where detail_presensi.id_presensi = '"+User.getString(2)+"'";
+                    + " ON id_jenis_presensi = jenis_presensi.id where detail_presensi.id_presensi = '"+id+"'";
             java.sql.ResultSet rs = stm.executeQuery(sql);
 
 //            ResultSet rs = new Select().all("presensi");

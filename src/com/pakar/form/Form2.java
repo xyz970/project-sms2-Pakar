@@ -506,7 +506,7 @@ public class Form2 extends javax.swing.JPanel implements ActionListener {
         PopupDetailPresensi popup = new PopupDetailPresensi();
         popup.setTitle("Detail Presensi " + nama);
         try {
-            popup.load_table(nama);
+            popup.load_table(nama,model.getValueAt(index, 0).toString());
         } catch (SQLException ex) {
             Logger.getLogger(Form2.class.getName()).log(Level.SEVERE, null, ex);
         }

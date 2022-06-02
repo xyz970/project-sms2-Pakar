@@ -156,6 +156,8 @@ public class login extends javax.swing.JFrame {
 //                    UserSession us = UserSession();
                     Main utm = new Main();
                     utm.setVisible(true);
+                    utm.repaint();
+                    utm.pack();
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Username atau Password Salah", "Pesan Pemberitahuan", JOptionPane.WARNING_MESSAGE);

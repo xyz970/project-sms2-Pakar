@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Akbar Ramadhani Firdaus
  */
-public class PopupLogout extends javax.swing.JFrame {
+public class PopupLogout extends javax.swing.JDialog {
 
     /**
      * Creates new form PopupLogout
@@ -121,10 +121,15 @@ public class PopupLogout extends javax.swing.JFrame {
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         User us = new User();
+        try {
+            Main mn = new Main();
+            mn.setVisible(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(PopupLogout.class.getName()).log(Level.SEVERE, null, ex);
+        }
         us.setVisible(true);
         dispose();
-
-            close();
+        close();
        
         
     }//GEN-LAST:event_jLabel5MouseClicked

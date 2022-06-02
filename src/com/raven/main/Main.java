@@ -4,11 +4,12 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.pakar.component.Header;
 import com.pakar.component.Menu;
 import com.pakar.component.PopupLogout;
+import com.pakar.component.User;
 import com.raven.event.EventMenuSelected;
 import com.raven.event.EventShowPopupMenu;
 import com.pakar.form.Form1;
 import com.pakar.form.Form2;
-import com.pakar.form.Form3; 
+import com.pakar.form.Form3;
 import com.pakar.form.Form4;
 import com.pakar.form.Form_Home;
 import com.pakar.form.MainForm;
@@ -22,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import net.miginfocom.swing.MigLayout;
@@ -37,18 +39,31 @@ public class Main extends javax.swing.JFrame {
     private MainForm main;
     private Animator animator;
 
-
     public Main() throws SQLException {
         initComponents();
         init();
-        
+
     }
-    
-    void logout(){
-        
-        PopupLogout pl = new PopupLogout();
-        pl.setVisible(true);
-        this.setVisible(false);
+
+    public static int confirmValue(String pesan, String judul) {
+//        JOptionPane.showConfirmDialog(parentComponent, pesan, judul, 0, 0)
+        int dialog = JOptionPane.showConfirmDialog(null, pesan, judul, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        return dialog;
+    }
+
+    void logout() {
+        User us = new User();
+        int pilihan = confirmValue("Apakah anda yakin ingin logout?", "Logout?");
+        if (pilihan == 0) {
+            this.setVisible(false);
+            us.setVisible(true);
+
+        }
+//        System.out.println(pilihan);
+//        
+//        PopupLogout pl = new PopupLogout();
+//        pl.setVisible(true);
+//        this.setVisible(false);
     }
 
     public void init() throws SQLException {
@@ -62,24 +77,23 @@ public class Main extends javax.swing.JFrame {
             public void menuSelected(int menuIndex, int subMenuIndex) {
                 System.out.println("Menu Index : " + menuIndex + " SubMenu Index " + subMenuIndex);
                 if (menuIndex == 0) {
-                    try{
-                    main.showForm(new Form_Home());
-                    if (subMenuIndex == 0) {
+                    try {
                         main.showForm(new Form_Home());
+                        if (subMenuIndex == 0) {
+                            main.showForm(new Form_Home());
+                        }
+                    } catch (SQLException ex) {
                     }
-                }catch (SQLException ex){}
-                    
-                }else if(menuIndex == 1){
+
+                } else if (menuIndex == 1) {
                     main.showForm(new Form1());
-                }
-                else if(menuIndex == 2){
+                } else if (menuIndex == 2) {
                     main.showForm(new Form2());
-                }
-                else if(menuIndex == 3){
+                } else if (menuIndex == 3) {
                     main.showForm(new Form4());
-                }else if(menuIndex == 4){
+                } else if (menuIndex == 4) {
                     main.showForm(new Form3());
-                } else if(menuIndex == 5){
+                } else if (menuIndex == 5) {
                     logout();
                 }
             }
@@ -179,7 +193,7 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public static void main(String args[]) {
-        
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

@@ -96,18 +96,23 @@ public class PopupTambahPresensi extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(new PopupTambahPresensi(), "Data presensi berhasil dimasukkan");
     }
 
-    private void InsertDetail(String format) throws SQLException {
+    private void InsertDetail(String format){
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date dateDate = new Date();
         String timeNow = dateFormat.format(dateDate);
 
-        java.sql.Connection con = (Connection) Settings.MyConfig();
+        try {
+            java.sql.Connection con = (Connection) Settings.MyConfig();
         String sqlInsert = "INSERT INTO `detail_presensi`\n"
                 + "(`id_presensi`, `id_jenis_presensi`, `jam`, `keterangan`) \n"
                 + "VALUES ('" + format + "','LMBR','" + timeNow + "','Toleransi')";
         java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
         pst2.execute();
         dialog();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        
     }
 
     /**
@@ -207,9 +212,9 @@ public class PopupTambahPresensi extends javax.swing.JDialog {
                 InsertPresensi(txt_nama.getText());
 
                 this.setVisible(false);
-                throw new Exception("Data sudah ada, Anda sudah melakukan absen pada hari tersebut");
+//                throw new Exception("Data sudah ada, Anda sudah melakukan absen pada hari tersebut");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
+//                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
         }
     }//GEN-LAST:event_btn_simpanActionPerformed

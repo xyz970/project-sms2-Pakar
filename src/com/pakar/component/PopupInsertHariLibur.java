@@ -41,19 +41,19 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
         WindowEvent closeWindow = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(closeWindow);
     }
-
+    
     private void clear() {
         txt_id.setText(null);
         txt_hari.setText(null);
         txt_keterangan.setText(null);
     }
-
+    
     public PopupInsertHariLibur(JFrame fr) {
         super(fr, true);
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
-
+            
         }
         initComponents();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
@@ -65,7 +65,7 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
 //        initiateDropdownPekerjaan();
 //        txt_nik.setVisible(false);
     }
-
+    
     public void getDay(Date date) {
         if (txt_tanggal.getDate() != null) {
             Date now = new Date();
@@ -96,7 +96,7 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
                 case "Sunday":
                     txt_hari.setText("Minggu");
                     break;
-
+                
                 default:
                     throw new AssertionError();
             }
@@ -275,28 +275,29 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/check.png"));
-        try {
-            Insert insert = new Insert();
-            String pattern = "YYYY-M-dd";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            String[] id = {"id", "hari", "keterangan", "tanggal"};
-            String tanggal = simpleDateFormat.format(txt_tanggal.getDateEditor().getDate());
-            String[] rowData = {txt_id.getText(), txt_hari.getText(), txt_keterangan.getText(), tanggal};
-            insert.Table("jadwal_libur", id, rowData);
-//            String sql = "INSERT INTO jadwal_libur VALUES ('"+txt_id.getText()+"','"
-//            +txt_hari.getText()+"','"+txt_keterangan.getText()+"')";
-//            java.sql.Connection conn=(Connection)koneksi.configDB();
-//            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-//            pst.execute();
-            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil", "Pesan Pemberitahuan", JOptionPane.PLAIN_MESSAGE, icon);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        if (txt_hari.getText().equals("")
+                && txt_id.getText().equals("")
+                && txt_keterangan.getText().equals("")
+                && txt_tanggal.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Mohon isi field yang disediakan", "Error..", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                Insert insert = new Insert();
+                String pattern = "YYYY-M-dd";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String[] id = {"id", "hari", "keterangan", "tanggal"};
+                String tanggal = simpleDateFormat.format(txt_tanggal.getDateEditor().getDate());
+                String[] rowData = {txt_id.getText(), txt_hari.getText(), txt_keterangan.getText(), tanggal};
+                insert.Table("jadwal_libur", id, rowData);
+                JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil", "Pesan Pemberitahuan", JOptionPane.PLAIN_MESSAGE, icon);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+            this.setVisible(false);
+            new Form4().load_table();
+            new Form4().repaint();
+            clear();
         }
-        this.setVisible(false);
-        new Form4().load_table();
-        new Form4().repaint();
-        clear();
-
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txt_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_idActionPerformed
