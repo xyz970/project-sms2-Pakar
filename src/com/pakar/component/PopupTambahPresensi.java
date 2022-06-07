@@ -96,23 +96,40 @@ public class PopupTambahPresensi extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(new PopupTambahPresensi(), "Data presensi berhasil dimasukkan");
     }
 
-    private void InsertDetail(String format){
+    private void InsertDetail(String format) {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date dateDate = new Date();
         String timeNow = dateFormat.format(dateDate);
 
         try {
-            java.sql.Connection con = (Connection) Settings.MyConfig();
-        String sqlInsert = "INSERT INTO `detail_presensi`\n"
-                + "(`id_presensi`, `id_jenis_presensi`, `jam`, `keterangan`) \n"
-                + "VALUES ('" + format + "','LMBR','" + timeNow + "','Toleransi')";
-        java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
-        pst2.execute();
-        dialog();
+            String[] condition = {" id = '" + format + "'"};
+            ResultSet rs = new Select().getWhere("presensi", condition);
+            if (rs.next()) {
+                java.sql.Connection con = (Connection) Settings.MyConfig();
+                String sqlInsert = "INSERT INTO `detail_presensi`\n"
+                        + "(`id_presensi`, `id_jenis_presensi`, `jam`, `keterangan`) \n"
+                        + "VALUES ('" + format + "','LMBR','" + timeNow + "','Toleransi')";
+                java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
+                pst2.execute();
+                dialog();
+            } else {
+                 JOptionPane.showMessageDialog(this, "Lembur tidak tersedia, dikarenakan anda tidak presensi pada hari tersebut","Terjadi kesalahan",JOptionPane.ERROR_MESSAGE);
+            }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-        
+
+//        try {
+//            java.sql.Connection con = (Connection) Settings.MyConfig();
+//        String sqlInsert = "INSERT INTO `detail_presensi`\n"
+//                + "(`id_presensi`, `id_jenis_presensi`, `jam`, `keterangan`) \n"
+//                + "VALUES ('" + format + "','LMBR','" + timeNow + "','Toleransi')";
+//        java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
+//        pst2.execute();
+//        dialog();
+//        } catch (SQLException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//        }
     }
 
     /**

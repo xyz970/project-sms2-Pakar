@@ -138,8 +138,10 @@ public class Form4 extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        txt_month = new com.toedter.calendar.JMonthChooser();
+        txt_year = new com.toedter.calendar.JYearChooser();
+        btn_filter = new javax.swing.JButton();
 
-        popup_delete.setBackground(new java.awt.Color(255, 255, 255));
         popup_delete.setFont(new java.awt.Font("Montserrat", 1, 18)); // NOI18N
         popup_delete.setForeground(new java.awt.Color(255, 0, 0));
         popup_delete.setText("DELETE");
@@ -210,16 +212,14 @@ public class Form4 extends javax.swing.JPanel {
         });
         jTable1.setFocusable(false);
         jTable1.setRowHeight(40);
-        jTable1.setRowMargin(0);
         jTable1.setSelectionBackground(new java.awt.Color(64, 194, 255));
-        jTable1.setShowVerticalLines(false);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jTable1MouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTable1);
@@ -250,7 +250,20 @@ public class Form4 extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
-        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 80, 150, 40));
+        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 90, 100, 30));
+        add(txt_month, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 60, -1, -1));
+        add(txt_year, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 60, -1, -1));
+
+        btn_filter.setBackground(new java.awt.Color(64, 194, 255));
+        btn_filter.setFont(new java.awt.Font("Montserrat", 1, 13)); // NOI18N
+        btn_filter.setForeground(new java.awt.Color(255, 255, 255));
+        btn_filter.setText("Filter");
+        btn_filter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_filterActionPerformed(evt);
+            }
+        });
+        add(btn_filter, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 90, 90, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     private void txt_cariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cariKeyReleased
@@ -312,7 +325,7 @@ public class Form4 extends javax.swing.JPanel {
         int row = jTable1.getSelectedRow();
         if (row != -1) {
             String nik = jTable1.getValueAt(row, 0).toString();
-            String sql = "DELETE FROM karyawan WHERE nik='" + nik + "'";
+            String sql = "DELETE FROM jadwal_libur WHERE nik='" + nik + "'";
             try {
                 java.sql.Connection conn = (Connection) koneksi.configDB();
                 java.sql.PreparedStatement pst = conn.prepareStatement(sql);
@@ -324,7 +337,43 @@ public class Form4 extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_popup_deleteActionPerformed
 
+    private void btn_filterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_filterActionPerformed
+        int row = model.getRowCount();
+        int month = txt_month.getMonth()+1;
+        int year = txt_year.getYear();
+        System.out.println("Bulan "+month);
+        System.out.println("Tahun "+year);
+        for (int i = 0; i < row; i++) {
+            model.removeRow(0);
+        }
+        try {
+            int no = 1;
+            String sql = "Select * from jadwal_libur where month(tanggal) = '"+month+"' && "
+                    + " year(tanggal) = '"+year+"'";
+
+//                   cari.equals("") 
+//                    : "Select * From karyawan Where karyawan.nik LIKE '%"+cari+"%'";
+//            String sql = "SELECT karyawan.nik, karyawan.nama, karyawan.jabatan ,karyawan.jenis_kelamin, karyawan.alamat, karyawan.no_hp "
+//                    + "FROM karyawan join jabatan on karyawan.jabatan_id = jabatan.id WHERE karyawan.nik LIKE '%"+cari+"%'";
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
+
+            while (rs.next()) {
+                model.addRow(new Object[]{no++, rs.getString(1),
+                    rs.getString(2), rs.getString(3), rs.getString(4)});
+                jTable1.setModel(model);
+                jTable1.validate();
+                jTable1.repaint();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btn_filterActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_filter;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
@@ -335,5 +384,7 @@ public class Form4 extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JMenuItem popup_delete;
     private javax.swing.JTextField txt_cari;
+    private com.toedter.calendar.JMonthChooser txt_month;
+    private com.toedter.calendar.JYearChooser txt_year;
     // End of variables declaration//GEN-END:variables
 }

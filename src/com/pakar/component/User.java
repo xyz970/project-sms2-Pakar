@@ -40,11 +40,6 @@ public class User extends javax.swing.JFrame {
      */
     public User() {
         initComponents();
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-
-        }
         nama.setText(" ");
         nik.setText(" ");
         jabatan.setText(" ");
@@ -97,6 +92,17 @@ public class User extends javax.swing.JFrame {
                 Calendar date = Calendar.getInstance();
                 int hour = date.get(Calendar.HOUR_OF_DAY);
                 setHour(hour);
+                if (getHour() >= 6 && getHour() <= 8) {
+                    keterangan.setText("     Absen datang...");
+                } else if (getHour() >= 11 && getHour() <= 13) {
+                    keterangan.setText("     Absen Istirahat 1...");
+                } else if (getHour() >= 13 && getHour() <= 14) {
+                    keterangan.setText("     Absen Istirahat 2...");
+                } else if (getHour() >= 15 && getHour() <= 17) {
+                    keterangan.setText("     Absen Pulang");
+                } else {
+                    keterangan.setText(" ");
+                }
 //                System.out.println(getHour());
 
             }
@@ -136,18 +142,7 @@ public class User extends javax.swing.JFrame {
             jabatan.setText("");
             nama.setText("");
         }
-        if (getHour() >= 6 && getHour() <= 8) {
-            keterangan.setText("     Absen datang...");
-        } else if (getHour() >= 11 && getHour() <= 13) {
-            keterangan.setText("     Absen Istirahat 1...");
-        } else if (getHour() >= 13 && getHour() <= 14) {
 
-            keterangan.setText("     Absen Istirahat 2...");
-        } else if (getHour() >= 15 && getHour() <= 17) {
-            keterangan.setText("     Absen Pulang");
-        } else {
-            keterangan.setText(" ");
-        }
     }
 
     private void insertUser(String card_id) throws SQLException {

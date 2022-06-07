@@ -29,11 +29,11 @@ public class login extends javax.swing.JFrame {
 
     public login() {
         initComponents();
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-
-        }
+//        try {
+//            UIManager.setLookAndFeel(new FlatLightLaf());
+//        } catch (UnsupportedLookAndFeelException e) {
+//
+//        }
 
     }
 
@@ -149,7 +149,7 @@ public class login extends javax.swing.JFrame {
             if (rs.next()) {
                 txtusername.setText(rs.getString("Username"));
                 if (txtpass.getText().equals(rs.getString("Password")) && txtusername.getText().equals(rs.getString("Username"))) {
-                    JOptionPane.showMessageDialog(null, "berhasil login");
+//                    JOptionPane.showMessageDialog(null, "berhasil login");
                     this.setVisible(false);
                     Header hd = new Header();
                     hd.lbUserName.setText(txtusername.getText());

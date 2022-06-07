@@ -41,11 +41,17 @@ public class Main extends javax.swing.JFrame {
 
     public Main() throws SQLException {
         initComponents();
+//          try {
+//            UIManager.setLookAndFeel(new FlatLightLaf());
+//        } catch (UnsupportedLookAndFeelException e) {
+//
+//        }
         init();
 
     }
 
     public static int confirmValue(String pesan, String judul) {
+        
 //        JOptionPane.showConfirmDialog(parentComponent, pesan, judul, 0, 0)
         int dialog = JOptionPane.showConfirmDialog(null, pesan, judul, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         return dialog;

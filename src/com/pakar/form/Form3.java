@@ -43,13 +43,14 @@ public class Form3 extends javax.swing.JPanel {
         jTable1.setRowHeight(40);
         jTable1.setShowHorizontalLines(true);
     }
+
     public void load_table() {
         DefaultTableModel model = new DefaultTableModel() {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 //        jTable1.setModel(model);
         model.addColumn("NIK");
         model.addColumn("Nama");
@@ -92,6 +93,7 @@ public class Form3 extends javax.swing.JPanel {
 //        chart.addData(new ModelChart("May", new double[]{350, 540, 300,150}));
 //        chart.addData(new ModelChart("June", new double[]{190, 280, 81,200}));
 //    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -217,23 +219,23 @@ public class Form3 extends javax.swing.JPanel {
             model.removeRow(0);
         }
 
-        try{
+        try {
             int no = 1;
-            String sql = "Select * from karyawan Where nama LIKE '%"+cari+"%'";
-            java.sql.Connection conn=(Connection)koneksi.configDB();
-            java.sql.Statement stm=conn.createStatement();
-            java.sql.ResultSet rs=stm.executeQuery(sql);
+            String sql = "Select * from karyawan Where nama LIKE '%" + cari + "%'";
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
 
-            while(rs.next()){
+            while (rs.next()) {
                 model.addRow(new Object[]{rs.getString(1),
-                    rs.getString(2),rs.getString(3),rs.getString(4),
-                    rs.getString(5),rs.getString(6)});
-            jTable1.setModel(model);
-            jTable1.validate();
-            jTable1.repaint();
-        }
+                    rs.getString(2), rs.getString(3), rs.getString(4),
+                    rs.getString(5), rs.getString(6)});
+                jTable1.setModel(model);
+                jTable1.validate();
+                jTable1.repaint();
+            }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_txt_cari2KeyReleased
@@ -247,15 +249,15 @@ public class Form3 extends javax.swing.JPanel {
     }//GEN-LAST:event_jTable1MouseReleased
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-         PolarChart pl = new PolarChart();
-        
+        PolarChart pl = new PolarChart();
+
         //get month year    
-        java.util.Date date= new Date();
+        java.util.Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        int month = cal.get(Calendar.MONTH)+1;
+        int month = cal.get(Calendar.MONTH) + 1;
         int year = cal.get(Calendar.YEAR);
-        
+
         int baris = jTable1.rowAtPoint(evt.getPoint());
         int index = jTable1.getSelectedRow();
         TableModel model = jTable1.getModel();
@@ -265,77 +267,96 @@ public class Form3 extends javax.swing.JPanel {
         String pekerjaan = model.getValueAt(index, 2).toString();
         //total_hadir
         try {
-            String sql = "SELECT COUNT(keterangan) as total_hadir from presensi WHERE MONTH(tanggal) = "+month+" AND YEAR(tanggal) = "+year+" AND karyawan_nik='"+nik+"' AND keterangan='Hadir'";
+            String sql = "SELECT COUNT(keterangan) as total_hadir from presensi WHERE MONTH(tanggal) = " + month + " AND YEAR(tanggal) = " + year + " AND karyawan_nik='" + nik + "' AND keterangan='Hadir'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 pl.txt_hadir.setText(String.valueOf(rs.getInt("total_hadir")));
                 System.out.println(rs.getInt("total_hadir"));
-                System.out.println(""+sql);
+                System.out.println("" + sql);
                 pl.polarAreaChart.addItem(new ModelPolarAreaChart(new Color(9, 91, 255), "Hadir", rs.getInt("total_hadir")));
-                
+
             }
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        
-    }
+
+        }
         //total_sakit
-         try {
-            String sql = "SELECT COUNT(keterangan) as total_sakit from presensi WHERE MONTH(tanggal) = "+month+" AND YEAR(tanggal) = "+year+" AND karyawan_nik='"+nik+"' AND keterangan='Sakit'";
+        try {
+            String sql = "SELECT COUNT(keterangan) as total_sakit from presensi WHERE MONTH(tanggal) = " + month + " AND YEAR(tanggal) = " + year + " AND karyawan_nik='" + nik + "' AND keterangan='Sakit'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 pl.txt_sakit.setText(String.valueOf(rs.getInt("total_sakit")));
                 System.out.println(rs.getInt("total_sakit"));
-                System.out.println(""+sql);
+                System.out.println("" + sql);
                 pl.polarAreaChart.addItem(new ModelPolarAreaChart(new Color(255, 255, 0), "Sakit", rs.getInt("total_sakit")));
             }
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        
-    }
-         //total_izin
-         try {
-            String sql = "SELECT COUNT(keterangan) as total_izin from presensi WHERE MONTH(tanggal) = "+month+" AND YEAR(tanggal) = "+year+" AND karyawan_nik='"+nik+"' AND keterangan='Izin'";
+
+        }
+        //total_izin
+        try {
+            String sql = "SELECT COUNT(keterangan) as total_izin from presensi WHERE MONTH(tanggal) = " + month + " AND YEAR(tanggal) = " + year + " AND karyawan_nik='" + nik + "' AND keterangan='Izin'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 pl.txt_izin.setText(String.valueOf(rs.getInt("total_izin")));
                 System.out.println(rs.getInt("total_izin"));
-                System.out.println(""+sql);
+                System.out.println("" + sql);
                 pl.polarAreaChart.addItem(new ModelPolarAreaChart(new Color(33, 255, 9), "Izin", rs.getInt("total_izin")));
             }
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        
-    }
-         //total_alpha
-         try {
-            String sql = "SELECT COUNT(keterangan) as total_alpha from presensi WHERE MONTH(tanggal) = "+month+" AND YEAR(tanggal) = "+year+" AND karyawan_nik='"+nik+"' AND keterangan='Tidak Hadir'";
+
+        }
+        //total_alpha
+        try {
+            String sql = "SELECT COUNT(keterangan) as total_alpha from presensi WHERE MONTH(tanggal) = " + month + " AND YEAR(tanggal) = " + year + " AND karyawan_nik='" + nik + "' AND keterangan='Tidak Hadir'";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 pl.txt_alpha.setText(String.valueOf(rs.getInt("total_alpha")));
                 System.out.println(rs.getInt("total_alpha"));
-                System.out.println(""+sql);
-                pl.polarAreaChart.addItem(new ModelPolarAreaChart(new Color(255, 0, 0), "Alpha", rs.getInt("total_alpha")));
+                System.out.println("" + sql);
+                pl.polarAreaChart.addItem(new ModelPolarAreaChart(new Color(255, 0, 0), "Tidak Hadir", rs.getInt("total_alpha")));
             }
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        
-    }
+
+        }
+        //total_lembur
+        try {
+            String sql = "SELECT COUNT(id_jenis_presensi) as total_lembur from detail_presensi "
+                    + " JOIN presensi "
+                    + " ON presensi.id = id_presensi "
+                    + " WHERE MONTH(presensi.tanggal) = " + month + " AND "
+                    + " YEAR(presensi.tanggal) = " + year + " AND "
+                    + " presensi.karyawan_nik='" + nik + "' AND "
+                    + " detail_presensi.id_jenis_presensi='LMBR'";
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                pl.txt_lembur.setText(String.valueOf(rs.getInt("total_lembur")));
+                System.out.println(rs.getInt("total_lembur"));
+                System.out.println("" + sql);
+                pl.polarAreaChart.addItem(new ModelPolarAreaChart(new Color(153, 50, 204), "Lembur", rs.getInt("total_lembur")));
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+
+        }
         pl.polarAreaChart.start();
         pl.setVisible(true);
         pl.setTitle("Statistik");
@@ -343,7 +364,7 @@ public class Form3 extends javax.swing.JPanel {
         pl.txt_nik.setText(nik);
         pl.txt_nama.setText(nama);
         pl.txt_jabatan.setText(pekerjaan);
-        System.out.println(""+nik);
+        System.out.println("" + nik);
         java.sql.PreparedStatement preparedStatement = null;
 //        PolarChart pl = new PolarChart();
 //        int baris = jTable1.rowAtPoint(evt.getPoint());
@@ -396,15 +417,14 @@ public class Form3 extends javax.swing.JPanel {
 //        } catch (SQLException ex) {
 //            Logger.getLogger(Form3.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-      
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btn_allActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_allActionPerformed
         // TODO add your handling code here:
         BarChart bc = new BarChart();
         bc.setVisible(true);
-//        Chart ch = new Chart();
-        bc.TampilTH();
+
     }//GEN-LAST:event_btn_allActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
