@@ -1,5 +1,6 @@
 package com.pakar.form;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.pakar.component.PopupDeleteDataPegawai;
 import com.pakar.component.PopupEditDataPegawai;
 import com.pakar.component.PopupInsertPegawai;
@@ -43,6 +44,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -110,7 +113,13 @@ public class Form1 extends javax.swing.JPanel implements ActionListener {
 //    PopupEditDataPegawai poep = new PopupEditDataPegawai();
 
     public Form1() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+
+        }
         initComponents();
+        
         setOpaque(false);
 //        initData();
         btn_export.addActionListener(this);

@@ -41,6 +41,7 @@ public class Main extends javax.swing.JFrame {
 
     public Main() throws SQLException {
         initComponents();
+        this.setTitle("Admin");
 //          try {
 //            UIManager.setLookAndFeel(new FlatLightLaf());
 //        } catch (UnsupportedLookAndFeelException e) {

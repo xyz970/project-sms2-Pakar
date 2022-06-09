@@ -40,6 +40,7 @@ public class User extends javax.swing.JFrame {
      */
     public User() {
         initComponents();
+        this.setTitle("Presensi");
         nama.setText(" ");
         nik.setText(" ");
         jabatan.setText(" ");

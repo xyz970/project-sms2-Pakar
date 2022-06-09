@@ -442,6 +442,31 @@ public class PolarChart extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
         
     } 
+         //total_lembur
+         try {
+            String sql = "SELECT COUNT(id_jenis_presensi) as total_lembur from detail_presensi "
+                    + " JOIN presensi "
+                    + " ON presensi.id = id_presensi "
+                    + " WHERE MONTH(presensi.tanggal) = "+select_month+" AND "
+                    + " YEAR(presensi.tanggal) = "+select_year+" AND "
+                    + " presensi.karyawan_nik='"+txt_nik.getText()+"' AND "
+                    + " detail_presensi.id_jenis_presensi='LMBR'";
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
+            while(rs.next()){
+                txt_lembur.setText(String.valueOf(rs.getInt("total_lembur")));
+                System.out.println(rs.getInt("total_lembur"));
+                System.out.println(""+sql);
+                polarAreaChart.addItem(new ModelPolarAreaChart(new Color(153, 50, 204), "Lembur", rs.getInt("total_lembur")));
+            }
+          
+            
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        
+    } 
        polarAreaChart.start();
     }//GEN-LAST:event_button_submitActionPerformed
     

@@ -19,6 +19,7 @@ import com.pakar.koneksi.koneksi;
 import com.raven.main.Main;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 /**
  *
@@ -29,11 +30,11 @@ public class login extends javax.swing.JFrame {
 
     public login() {
         initComponents();
-//        try {
-//            UIManager.setLookAndFeel(new FlatLightLaf());
-//        } catch (UnsupportedLookAndFeelException e) {
-//
-//        }
+        try {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+        } catch (UnsupportedLookAndFeelException e) {
+
+        }
 
     }
 

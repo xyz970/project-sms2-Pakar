@@ -26,10 +26,17 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Form3 extends javax.swing.JPanel {
 
     public Form3() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+
+        }
         initComponents();
         setOpaque(false);
         load_table();
@@ -38,7 +45,7 @@ public class Form3 extends javax.swing.JPanel {
         jTable1.getTableHeader().setFont(new Font("Montserrat", Font.BOLD, 14));
 //        jTable1.getTableHeader().setBackground(new Color(64, 149, 244));
 //        jTable1.getTableHeader().setForeground(new Color(51, 51, 51));
-        FlatLightLaf.install();
+//        FlatLightLaf.install();
         jTable1.setGridColor(new Color(230, 230, 230));
         jTable1.setRowHeight(40);
         jTable1.setShowHorizontalLines(true);

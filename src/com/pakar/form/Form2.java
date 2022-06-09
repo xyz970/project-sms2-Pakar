@@ -114,7 +114,7 @@ public class Form2 extends javax.swing.JPanel implements ActionListener {
         jTable1.getTableHeader().setFont(new Font("Montserrat", Font.BOLD, 14));
 //        jTable1.getTableHeader().setBackground(new Color(64, 149, 244));
 //        jTable1.getTableHeader().setForeground(new Color(51, 51, 51));
-        FlatLightLaf.install();
+//        FlatLightLaf.install();
         jTable1.setGridColor(new Color(230, 230, 230));
         jTable1.setRowHeight(40);
         jTable1.setShowHorizontalLines(true);
@@ -458,9 +458,9 @@ public class Form2 extends javax.swing.JPanel implements ActionListener {
                     jTable1.repaint();
                 }
             } else {
-                
-            String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
-            String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
+
+                String tanggal1 = simpleDateFormat.format(txt_tanggal1.getDateEditor().getDate());
+                String tanggal2 = simpleDateFormat.format(txt_tanggal2.getDateEditor().getDate());
                 String sql = "SELECT presensi.id,presensi.tanggal,karyawan.nama,presensi.keterangan \n"
                         + " FROM `presensi` \n"
                         + " JOIN karyawan \n"
@@ -503,17 +503,26 @@ public class Form2 extends javax.swing.JPanel implements ActionListener {
 
         String nama = model.getValueAt(index, 2).toString();
         String tanggal = model.getValueAt(index, 1).toString();
+        String id = model.getValueAt(index, 0).toString();
         PopupDetailPresensi popup = new PopupDetailPresensi();
         popup.setTitle("Detail Presensi " + nama);
         try {
-            popup.load_table(nama,model.getValueAt(index, 0).toString());
-        } catch (SQLException ex) {
-            Logger.getLogger(Form2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        popup.txt_nama.setText(nama);
+            String sql = "Select * from detail_presensi where id_presensi = '"+id+"'";
+            java.sql.Connection conn = (Connection) koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet rs = stm.executeQuery(sql);
+            if (rs.next()) {
+                popup.load_table(nama, model.getValueAt(index, 0).toString());
+                popup.txt_nama.setText(nama);
         popup.txt_tanggal.setText(tanggal);
         popup.setVisible(true);
         popup.pack();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Form2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
 
     }//GEN-LAST:event_jTable1MouseClicked
 

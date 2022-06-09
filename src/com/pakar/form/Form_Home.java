@@ -49,14 +49,18 @@ public class Form_Home extends javax.swing.JPanel {
         jScrollPane1.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
         try {
             int no = 1;
-            String sql = "Select karyawan.nama,presensi.tanggal,karyawan.jabatan,presensi.keterangan from presensi "
-                    + " join karyawan on karyawan_nik = karyawan.nik order by presensi.created_at asc";
+            String sql = "select karyawan.nama,karyawan.jabatan,jam,jenis_presensi.ket_jenis_presensi \n"
+                    + "from detail_presensi \n"
+                    + "join presensi on id_presensi = presensi.id \n"
+                    + "join karyawan on karyawan_nik = karyawan.nik \n"
+                    + "join jenis_presensi on id_jenis_presensi = jenis_presensi.id \n"
+                    + "order by detail_presensi.jam asc limit 7";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
 
             while (rs.next()) {
-                        table1.addRow(new Object[]{rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4)});
+                table1.addRow(new Object[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)});
             }
 
         } catch (Exception e) {
@@ -64,7 +68,7 @@ public class Form_Home extends javax.swing.JPanel {
         }
 //        table1.addRow(new Object[]{"Muhammad Adi Saputro", "Karyawan", "07:54:00", StatusType.Hadir});
 //        table1.addRow(new Object[]{"Muhammad Maulana Malik Ibrahim", "Guru", "06:54:00", StatusType.Hadir});
- }
+    }
 
     private void initCardData() {
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
@@ -89,6 +93,7 @@ public class Form_Home extends javax.swing.JPanel {
         }
         return total;
     }
+
     int getDataKaryawan() {
         int total = 0;
         try {
@@ -103,6 +108,7 @@ public class Form_Home extends javax.swing.JPanel {
         }
         return total;
     }
+
     int getDataSatpam() {
         int total = 0;
         try {

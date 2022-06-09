@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  *
  * @author mhmmdadi21
  */
-public class PopupTambahPresensi extends javax.swing.JDialog {
+public class PopupTambahPresensi extends javax.swing.JFrame {
 
     /**
      * Creates new form PopupTambahPresensi
@@ -76,10 +76,10 @@ public class PopupTambahPresensi extends javax.swing.JDialog {
         } else {
             String[] condition = {" id = '" + idformat + "'"};
             ResultSet checkPresensi = slct.getWhere("presensi", condition);
-            int count = 0;
-            while (checkPresensi.next()) {
-                count++;
-            }
+            if (checkPresensi.next()) {
+                JOptionPane.showMessageDialog(this, "Anda Telah presensi pada hari tersebut","Terjadi kesalahan",JOptionPane.ERROR_MESSAGE);
+            } else {
+                
 
             String sqlInsert = "INSERT INTO `presensi`\n"
                     + "(`id`, `tanggal`, `karyawan_nik`, `keterangan`) \n"
@@ -88,12 +88,13 @@ public class PopupTambahPresensi extends javax.swing.JDialog {
             java.sql.PreparedStatement pst2 = con.prepareStatement(sqlInsert);
             pst2.execute();
             dialog();
+            }
         }
 
     }
 
     private void dialog() {
-        JOptionPane.showMessageDialog(new PopupTambahPresensi(), "Data presensi berhasil dimasukkan");
+        JOptionPane.showMessageDialog(this, "Data presensi berhasil dimasukkan");
     }
 
     private void InsertDetail(String format) {
@@ -230,8 +231,8 @@ public class PopupTambahPresensi extends javax.swing.JDialog {
 
                 this.setVisible(false);
 //                throw new Exception("Data sudah ada, Anda sudah melakukan absen pada hari tersebut");
-            } catch (Exception ex) {
-//                JOptionPane.showMessageDialog(this, ex.getMessage());
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
