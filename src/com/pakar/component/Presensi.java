@@ -48,7 +48,7 @@ public class Presensi {
 
     private void ErrorDialog(String message) {
         JOptionPane pane = new JOptionPane(message, JOptionPane.ERROR_MESSAGE);
-        JDialog dialog = pane.createDialog(null, "Title");
+        JDialog dialog = pane.createDialog(null, "Terjadi Kesalahan");
         dialog.setModal(false);
         dialog.setVisible(true);
 
@@ -109,7 +109,7 @@ public class Presensi {
             pst2.execute();
             Dialog();
         } catch (SQLException e) {
-            ErrorDialog(e.getMessage());;
+            ErrorDialog(e.getMessage());
         } finally {
             System.out.println("Errornya line 72");
         }

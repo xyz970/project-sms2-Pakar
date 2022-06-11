@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Akbar Ramadhani Firdaus
  */
-public class PopupInsertPegawai extends javax.swing.JDialog {
+public class PopupInsertPegawai extends javax.swing.JFrame {
 
     /**
      * Creates new form PopupInsertPegawai
@@ -44,37 +44,8 @@ public class PopupInsertPegawai extends javax.swing.JDialog {
         WindowEvent closeWindow = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(closeWindow);
     }
-//    private void initiateDropdownPekerjaan() {
-//        try {
-//            Connection c = koneksi.configDB();
-//            Statement s = c.createStatement();
-//            String sql = "SELECT id FROM `jabatan`";
-//            ResultSet rs = s.executeQuery(sql);
-//            while (rs.next()) {
-////                supplier_txt.
-//                jComboBox2.addItem(rs.getString("id"));
-//            }
-//        } catch (SQLException e) {
-////            MyFunction.showErrorMessage(e.getMessage(), "Error!");
-//        }
-//    }
-
-//    private void initiateDropdownJk() {
-//        try {
-//            Connection c = koneksi.configDB();
-//            Statement s = c.createStatement();
-//            String sql = "SELECT * FROM `karyawan`";
-//            ResultSet rs = s.executeQuery(sql);
-//            while (rs.next()) {
-////                supplier_txt.
-//                jComboBox1.addItem(rs.getString("jenis_kelamin"));
-//            }
-//        } catch (SQLException e) {
-////            MyFunction.showErrorMessage(e.getMessage(), "Error!");
-//        }
-//    }
     public PopupInsertPegawai(JFrame fr) {
-        super(fr, true);
+//        super(fr, true);
         initComponents();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 40, 40));

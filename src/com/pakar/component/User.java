@@ -39,6 +39,11 @@ public class User extends javax.swing.JFrame {
      * Creates new form User
      */
     public User() {
+         try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+
+        }
         initComponents();
         this.setTitle("Presensi");
         nama.setText(" ");

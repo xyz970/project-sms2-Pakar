@@ -30,7 +30,7 @@ public class PopupTambahPresensi extends javax.swing.JFrame {
         initComponents();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
         status_option.removeAllItems();
-        String[] option = {"Sakit", "Izin", "Lembur", "Hadir"};
+        String[] option = {"Sakit", "Izin", "Lembur", "Hadir","Tidak Hadir"};
         for (String option1 : option) {
             status_option.addItem(option1);
         }
@@ -229,7 +229,7 @@ public class PopupTambahPresensi extends javax.swing.JFrame {
             try {
                 InsertPresensi(txt_nama.getText());
 
-                this.setVisible(false);
+//                this.setVisible(false);
 //                throw new Exception("Data sudah ada, Anda sudah melakukan absen pada hari tersebut");
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());

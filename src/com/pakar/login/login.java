@@ -17,6 +17,7 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import com.pakar.koneksi.koneksi;
 import com.raven.main.Main;
+import java.awt.event.KeyEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
@@ -94,6 +95,11 @@ public class login extends javax.swing.JFrame {
                 txtpassActionPerformed(evt);
             }
         });
+        txtpass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtpassKeyPressed(evt);
+            }
+        });
         jPanel1.add(txtpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 480, 290, 30));
 
         jLabel3.setFont(new java.awt.Font("Montserrat", 1, 20)); // NOI18N
@@ -152,10 +158,11 @@ public class login extends javax.swing.JFrame {
                 if (txtpass.getText().equals(rs.getString("Password")) && txtusername.getText().equals(rs.getString("Username"))) {
 //                    JOptionPane.showMessageDialog(null, "berhasil login");
                     this.setVisible(false);
-                    Header hd = new Header();
-                    hd.lbUserName.setText(txtusername.getText());
+//                    Header hd = new Header();
+//                    hd.lbUserName.setText(txtusername.getText());
 //                    UserSession us = UserSession();
                     Main utm = new Main();
+                    utm.username = txtusername.getText();
                     utm.setVisible(true);
                     utm.repaint();
                     utm.pack();
@@ -173,6 +180,37 @@ public class login extends javax.swing.JFrame {
         User usr = new User();
         usr.setVisible(true);
     }//GEN-LAST:event_closeMouseClicked
+
+    private void txtpassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpassKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
+           try {
+            Select select = new Select();
+            String[] condition = {
+                "username = '" + txtusername.getText() + "'",
+                "password = '" + txtpass.getText() + "'",};
+            ResultSet rs = select.getWhere("admin", condition);
+            if (rs.next()) {
+                txtusername.setText(rs.getString("Username"));
+                if (txtpass.getText().equals(rs.getString("Password")) && txtusername.getText().equals(rs.getString("Username"))) {
+//                    JOptionPane.showMessageDialog(null, "berhasil login");
+                    this.setVisible(false);
+//                    Header hd = new Header();
+//                    hd.lbUserName.setText(txtusername.getText());
+//                    UserSession us = UserSession();
+                    Main utm = new Main();
+                    utm.username = txtusername.getText();
+                    utm.setVisible(true);
+                    utm.repaint();
+                    utm.pack();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Username atau Password Salah", "Pesan Pemberitahuan", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }  
+        }
+    }//GEN-LAST:event_txtpassKeyPressed
 
     /**
      * @param args the command line arguments

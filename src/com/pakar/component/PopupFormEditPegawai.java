@@ -325,7 +325,7 @@ public class PopupFormEditPegawai extends javax.swing.JDialog {
         jLabel14.setText("Kode ID             :");
         rounded3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, -1, -1));
 
-        txtcard_code.setBackground(new java.awt.Color(255, 255, 255));
+        txtcard_code.setEditable(false);
         txtcard_code.setFont(new java.awt.Font("Montserrat", 1, 16)); // NOI18N
         txtcard_code.setBorder(null);
         txtcard_code.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -369,7 +369,14 @@ public class PopupFormEditPegawai extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/check.png"));
-        try{
+        if (txt_alamat.getText().equals("")
+                || txt_nama.getText().equals("")
+                || txt_nik.getText().equals("")
+                || txt_nohp.getText().equals("")
+                || txtcard_code.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Dimohon untuk mengisi data yang ada", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try{
             String sql = "UPDATE karyawan SET nik = '"+txt_nik.getText()
             +"', nama = '"+txt_nama.getText()
             +"', jabatan = '"+jComboBox2.getSelectedItem()
@@ -389,6 +396,7 @@ public class PopupFormEditPegawai extends javax.swing.JDialog {
                 +e.getMessage());
         }
         close();
+                }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txt_nohpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nohpKeyTyped
@@ -427,7 +435,10 @@ public class PopupFormEditPegawai extends javax.swing.JDialog {
     }//GEN-LAST:event_txt_nohpKeyPressed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try{
+        int dialog = JOptionPane.showConfirmDialog(this, "Apakah anda yakin ingin menghapus data?",
+                "Question?",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (dialog == 0) {
+            try{
             String sql = "DELETE FROM karyawan WHERE nik='"+txt_nik.getText()+"'";
             java.sql.Connection conn=(Connection)koneksi.configDB();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
@@ -439,6 +450,8 @@ public class PopupFormEditPegawai extends javax.swing.JDialog {
         Form1 fm1 = new Form1();
         fm1.load_table();
         close();
+        }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txt_nikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_nikActionPerformed

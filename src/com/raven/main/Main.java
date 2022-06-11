@@ -38,10 +38,12 @@ public class Main extends javax.swing.JFrame {
     private Header header;
     private MainForm main;
     private Animator animator;
-
+    public String username;
     public Main() throws SQLException {
         initComponents();
         this.setTitle("Admin");
+        header = new Header();
+        header.lbUserName.setText(username);
 //          try {
 //            UIManager.setLookAndFeel(new FlatLightLaf());
 //        } catch (UnsupportedLookAndFeelException e) {
@@ -73,6 +75,10 @@ public class Main extends javax.swing.JFrame {
 //        this.setVisible(false);
     }
 
+    public void setUsername(String text){
+        header = new Header();
+        header.lbUserName.setText(text); 
+    }
     public void init() throws SQLException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);

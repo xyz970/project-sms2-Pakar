@@ -276,9 +276,9 @@ public class PopupInsertHariLibur extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/check.png"));
         if (txt_hari.getText().equals("")
-                && txt_id.getText().equals("")
-                && txt_keterangan.getText().equals("")
-                && txt_tanggal.getDate() == null) {
+                || txt_id.getText().equals("")
+                || txt_keterangan.getText().equals("")
+                || txt_tanggal.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Mohon isi field yang disediakan", "Error..", JOptionPane.ERROR_MESSAGE);
         } else {
             try {

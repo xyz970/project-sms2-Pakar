@@ -296,7 +296,13 @@ getTampil();
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String tanggal = simpleDateFormat.format(txt_tanggal.getDateEditor().getDate());
-        try{
+        if (txt_hari.getText().equals("")
+                || txt_id.getText().equals("")
+                || txt_keterangan.getText().equals("")
+                || txt_tanggal.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Mohon isi field yang disediakan", "Error..", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try{
             String sql = "UPDATE jadwal_libur SET id = '"+txt_id.getText()
             +"', hari = '"+txt_hari.getText()
             +"', tanggal = '"+tanggal
@@ -313,10 +319,14 @@ getTampil();
                 +e.getMessage());
         }
         close();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try{
+        int dialog = JOptionPane.showConfirmDialog(this, "Apakah anda yakin ingin menghapus data?",
+                "Question?",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (dialog == 0) {
+             try{
             String sql = "DELETE FROM jadwal_libur WHERE id='"+txt_id.getText()+"'";
             java.sql.Connection conn=(Connection)koneksi.configDB();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
@@ -326,6 +336,7 @@ getTampil();
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
         close();
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txt_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_idActionPerformed
