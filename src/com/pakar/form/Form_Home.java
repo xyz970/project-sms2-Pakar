@@ -54,7 +54,8 @@ public class Form_Home extends javax.swing.JPanel {
                     + "join presensi on id_presensi = presensi.id \n"
                     + "join karyawan on karyawan_nik = karyawan.nik \n"
                     + "join jenis_presensi on id_jenis_presensi = jenis_presensi.id \n"
-                    + "order by detail_presensi.jam asc limit 7";
+                    + " where presensi.tanggal = current_date "
+                    + " order by detail_presensi.jam asc limit 7 ";
             java.sql.Connection conn = (Connection) koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet rs = stm.executeQuery(sql);
